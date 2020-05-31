@@ -30,8 +30,7 @@ private static final Log log = Log.getLog(CronEmailService.class);
     }
 
 
-//    @Scheduled(cron = "{cron.expression}")
-    @Scheduled(every = "25s")
+    @Scheduled(cron = "{cron.expression}")
     void sendEmailCronJob() {
         for (MailDTO email : this.emails){
             log.info(email);
