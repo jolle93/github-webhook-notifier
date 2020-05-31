@@ -1,4 +1,9 @@
-# github-webhook-notifier project
+# github-webhook-notifier 
+
+Just a short Quarkus service to send mails on github web hook actions.
+
+This repository is just a short program of an assessment program.
+
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
