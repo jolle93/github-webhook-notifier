@@ -12,7 +12,7 @@ cache:
     - "$HOME/.m2/wrapper"
 
 script:
-  - "./mvnw package"
+  - "./mvnw package -DskipTests"
 
 notifications:
   email: true
