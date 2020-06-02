@@ -1,4 +1,5 @@
 # github-webhook-notifier 
+[![Build Status](https://travis-ci.com/jolle93/github-webhook-notifier.svg?branch=master)](https://travis-ci.com/jolle93/github-webhook-notifier)
 
 Just a short Quarkus service to send mails on github web hook actions.
 
