@@ -21,6 +21,7 @@ public class RuleService {
     public static final String PULL_REQUEST = "pull_request";
     public static final String REF_TYPE = "ref_type";
     public static final String TAG = "tag";
+    public static final String EMAIL = "email";
     @Inject
     @RestClient
     GithubService githubService;
@@ -45,20 +46,20 @@ public class RuleService {
         JsonNode owner = objectMapper.readTree(githubService.getAuthenticatedUser("Bearer " + authToken));
         JsonNode githubPayload = objectMapper.readTree(payload);
 
-        if (githubPayload.has(REF_TYPE) && githubPayload.get(REF_TYPE).asText().equals(TAG) && !isSameUser(owner.get("id").asText(), githubPayload.get("sender").get("id").asText())) {
+        if (githubPayload.has(REF_TYPE) && githubPayload.get(REF_TYPE).asText().equals(TAG) && isSameUser(owner.get("id").asText(), githubPayload.get("sender").get("id").asText())) {
             cronEmailService.getEmails().add(
-                    new MailDTO(owner.get("email").asText() != null ? owner.get("email").asText() : fallbackRecipient , "A new Tag", buildEmailBody(TAG, githubPayload)));
+                    new MailDTO(owner.get(EMAIL).asText() != null ? owner.get(EMAIL).asText() : fallbackRecipient, "A new Tag", buildEmailBody(TAG, githubPayload)));
         }
 
-        if (githubPayload.has(PULL_REQUEST) && !isSameUser(owner.get("id").asText(), githubPayload.get("user").get("id").asText())) {
+        if (githubPayload.has(PULL_REQUEST) && isSameUser(owner.get("id").asText(), githubPayload.get("user").get("id").asText())) {
             cronEmailService.getEmails().add(
-                    new MailDTO(owner.get("email").asText() != null ? owner.get("email").asText() : fallbackRecipient, "A new PR", buildEmailBody(PULL_REQUEST, githubPayload)));
+                    new MailDTO(owner.get(EMAIL).asText() != null ? owner.get(EMAIL).asText() : fallbackRecipient, "A new PR", buildEmailBody(PULL_REQUEST, githubPayload)));
         }
     }
 
 
     boolean isSameUser(String ownerId, String otherId) {
-        return ownerId.equalsIgnoreCase(otherId);
+        return !ownerId.equalsIgnoreCase(otherId);
     }
 
     String buildEmailBody(String rule, JsonNode payload) {
